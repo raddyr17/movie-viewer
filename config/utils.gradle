@@ -1,0 +1,12 @@
+ext {
+    setupUrl = {
+        flavor, serverUrl ->
+            flavor.buildConfigField 'String', 'SERVER_URL', serverUrl
+    }
+
+    changeAppNameAndAppId = {
+        flavor, appName, applicationIdPostfix ->
+            flavor.resValue 'String', 'app_name', appName
+            flavor.applicationId android.defaultConfig.applicationId + applicationIdPostfix
+    }
+}
