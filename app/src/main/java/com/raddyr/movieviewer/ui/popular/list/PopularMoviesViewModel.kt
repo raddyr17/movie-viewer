@@ -1,4 +1,4 @@
-package com.raddyr.movieviewer.ui.popular
+package com.raddyr.movieviewer.ui.popular.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @HiltViewModel
-class PopularMoviesViewModel @Inject constructor(private val mainRepository: MovieRepository) :
+class PopularMoviesViewModel @Inject constructor(private val movieRepository: MovieRepository) :
     ViewModel() {
 
     private val _dataState: MutableLiveData<DataState<List<Movie>?>> = MutableLiveData()
@@ -24,17 +24,17 @@ class PopularMoviesViewModel @Inject constructor(private val mainRepository: Mov
     val dataState: LiveData<DataState<List<Movie>?>>
         get() = _dataState
 
-    fun setStateEvent(popularMovieStateEvent: PopularMovieStateEvent) {
+    fun setStateEvent(popularMoviesListStateEvent: PopularMoviesListStateEvent) {
         viewModelScope.launch {
-            when (popularMovieStateEvent) {
-                is PopularMovieStateEvent.GetMovieEvent -> {
-                    mainRepository.getPopular()
+            when (popularMoviesListStateEvent) {
+                is PopularMoviesListStateEvent.GetMoviesListEvent -> {
+                    movieRepository.getPopularList()
                         .onEach { dataState ->
                             _dataState.value = dataState
                         }
                         .launchIn(viewModelScope)
                 }
-                PopularMovieStateEvent.None -> {}
+                PopularMoviesListStateEvent.None -> {}
             }
         }
     }
@@ -42,9 +42,9 @@ class PopularMoviesViewModel @Inject constructor(private val mainRepository: Mov
 }
 
 
-sealed class PopularMovieStateEvent {
+sealed class PopularMoviesListStateEvent {
 
-    object GetMovieEvent : PopularMovieStateEvent()
+    object GetMoviesListEvent : PopularMoviesListStateEvent()
 
-    object None : PopularMovieStateEvent()
+    object None : PopularMoviesListStateEvent()
 }

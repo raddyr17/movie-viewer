@@ -1,5 +1,6 @@
-package com.raddyr.movieviewer.ui.popular
+package com.raddyr.movieviewer.ui.popular.list
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -9,13 +10,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.raddyr.movieviewer.R
 import com.raddyr.movieviewer.databinding.PopularMoviesActivityBinding
 import com.raddyr.movieviewer.model.Movie
+import com.raddyr.movieviewer.ui.popular.PopularAdapter
+import com.raddyr.movieviewer.ui.popular.details.PopularMovieDetailsActivity
 import com.raddyr.movieviewer.util.DataState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class PopularMoviesActivity : AppCompatActivity() {
+class PopularMoviesListActivity : AppCompatActivity() {
 
     private lateinit var binding: PopularMoviesActivityBinding
 
@@ -26,7 +29,7 @@ class PopularMoviesActivity : AppCompatActivity() {
         binding = PopularMoviesActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         subscribeObservers()
-        viewModel.setStateEvent(PopularMovieStateEvent.GetMovieEvent)
+        viewModel.setStateEvent(PopularMoviesListStateEvent.GetMoviesListEvent)
     }
 
     private fun subscribeObservers() {
@@ -48,7 +51,10 @@ class PopularMoviesActivity : AppCompatActivity() {
     }
 
     private fun setAdapter(movies: List<Movie>) {
-        binding.recycler.adapter = PopularAdapter(movies)
+        binding.recycler.adapter =
+            PopularAdapter(movies) {
+                startActivity(Intent(this, PopularMovieDetailsActivity::class.java).putExtra(ID, it))
+            }
         binding.recycler.layoutManager = GridLayoutManager(this, 2)
     }
 
@@ -59,5 +65,9 @@ class PopularMoviesActivity : AppCompatActivity() {
 
     private fun displayProgressBar(isDisplayed: Boolean) {
         binding.progressBar.visibility = if (isDisplayed) View.VISIBLE else View.GONE
+    }
+
+    companion object {
+        private const val ID = "ID"
     }
 }

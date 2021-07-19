@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">movie-viewer</string>
     <string name="unknown_error">"Unknown error."</string>
+    <string name="release_date">(%s)</string>
 </resources>

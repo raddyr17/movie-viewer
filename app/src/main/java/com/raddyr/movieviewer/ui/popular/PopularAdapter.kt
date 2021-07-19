@@ -9,7 +9,7 @@ import com.raddyr.movieviewer.databinding.MovieListItemBinding
 import com.raddyr.movieviewer.model.Movie
 
 
-class PopularAdapter(private val list: List<Movie>) :
+class PopularAdapter(private val list: List<Movie>, val listener: (id: Long?) -> Unit) :
     RecyclerView.Adapter<PopularAdapter.PopularViewHolder>() {
 
     inner class PopularViewHolder(private val binding: MovieListItemBinding, val context: Context) :
@@ -20,6 +20,9 @@ class PopularAdapter(private val list: List<Movie>) :
                 .centerCrop()
                 .into(binding.image)
             binding.title.text = item.title
+            binding.root.setOnClickListener {
+                listener.invoke(item.id)
+            }
         }
     }
 
